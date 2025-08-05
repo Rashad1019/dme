@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detroit Mayoral Candidate Match</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Spirit-of-detroit.jpg/320px-Spirit-of-detroit.jpg" alt="Spirit of Detroit" class="logo">
+            <h1>Find Your Mayoral Match</h1>
+            <p>The 2025 Detroit Primary is tomorrow, August 5th! Tell us what's important to you, and we'll analyze which candidates best match your priorities.</p>
+        </header>
+
+        <main>
+            <div class="input-section">
+                <label for="user-priorities">What's important to you for the future of Detroit?</label>
+                <textarea id="user-priorities" rows="6" placeholder="Example: I care about better education, job training, ending food deserts, safety with mental health support, and transparency in city finances..."></textarea>
+                <button id="analyze-button">Razzle Dazzle ✨</button>
+            </div>
+
+            <div id="loading-spinner" class="hidden">
+                <div class="spinner"></div>
+                <p>Crunching the numbers...</p>
+            </div>
+
+            <div id="results-container"></div>
+        </main>
+    </div>
+
+    <script src="candidates.js"></script>
+    <script src="script.js"></script>
+
+</body>
+</html>
