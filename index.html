@@ -1,38 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detroit Mayoral Candidate Match</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Detroit Mayoral Match</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gray-100">
 
-    <div class="container">
-        <header>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Spirit-of-detroit.jpg/320px-Spirit-of-detroit.jpg" alt="Spirit of Detroit" class="logo">
-            <h1>Find Your Mayoral Match</h1>
-            <p>The 2025 Detroit Primary is tomorrow, August 5th! Tell us what's important to you, and we'll analyze which candidates best match your priorities.</p>
-        </header>
+  <div class="max-w-3xl mx-auto px-4 py-8">
+    <header class="text-center mb-8">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Spirit-of-detroit.jpg/320px-Spirit-of-detroit.jpg" alt="Spirit of Detroit" class="mx-auto mb-4 rounded shadow-md max-h-40">
+      <h1 class="text-3xl font-bold mb-2">Find Your Mayoral Match</h1>
+      <p class="text-gray-700">The 2025 Detroit Primary is August 5th. Enter your priorities and we’ll match you with the best-fit candidate.</p>
+    </header>
 
-        <main>
-            <div class="input-section">
-                <label for="user-priorities">What's important to you for the future of Detroit?</label>
-                <textarea id="user-priorities" rows="6" placeholder="Example: I care about better education, job training, ending food deserts, safety with mental health support, and transparency in city finances..."></textarea>
-                <button id="analyze-button">Razzle Dazzle ✨</button>
-            </div>
+    <main class="bg-white shadow-lg rounded-xl p-6">
+      <h2 class="text-xl font-semibold mb-4 text-center">What’s important to you for Detroit’s future?</h2>
 
-            <div id="loading-spinner" class="hidden">
-                <div class="spinner"></div>
-                <p>Crunching the numbers...</p>
-            </div>
+      <textarea id="user-priorities" rows="6" placeholder="Example: education, mental health, jobs, safety..." 
+        class="w-full border border-gray-300 rounded-lg p-4 text-sm focus:outline-none focus:ring focus:border-blue-400 resize-y mb-4"></textarea>
 
-            <div id="results-container"></div>
-        </main>
-    </div>
+      <button id="analyze-button"
+        class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition-all w-full text-lg font-semibold shadow">
+        Razzle Dazzle ✨
+      </button>
 
-    <script src="candidates.js"></script>
-    <script src="script.js"></script>
+      <div id="loading-spinner" class="text-center mt-6 hidden">
+        <div class="text-gray-500 italic animate-pulse">Crunching the numbers...</div>
+      </div>
 
+      <div id="results-container" class="mt-8 space-y-4"></div>
+    </main>
+  </div>
+
+  <script>
+    const candidates = [
+      {
+        name: "James Craig",
+        bio: "Former Chief of the Detroit Police Department.",
+        platforms: {
+          safety: "police law enforcement crime arrests patrol",
+          economy: "corporate business investment tax incentives growth",
+          accountability: "crime accountability basic government transparency"
+        }
+      },
+      {
+        name: "Mary Sheffield",
+        bio: "City Council President; author of Community Benefits Ordinance.",
+        platforms: {
+          safety: "holistic safety mental health youth programs",
+          economy: "jobs residents neighborhood small business inclusionary growth",
+          accountability: "transparency community benefits ordinance"
+        }
+      },
+      {
+        name: "Fred Durhal III",
+        bio: "Current Detroit City Councilman.",
+        platforms: {
+          safety: "mental health co-responders public safety",
+          economy: "parks community programs youth recreation",
+          accountability: "neighborhood equity blight"
+        }
+      }
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const analyzeButton = document.getElementById('analyze-button');
+      const userInput = document.getElementById('user-priorities');
+      const resultsContainer = document.getElementById('results-container');
+      const loadingSpinner = document.getElementById('loading-spinner');
+
+      analyzeButton.addEventListener('click', () => {
+        const input = userInput.value.toLowerCase().trim();
+        if (!input) {
+          alert("Please enter your priorities.");
+          return;
+        }
+
+        loadingSpinner.classList.remove('hidden');
+        resultsContainer.innerHTML = '';
+
+        setTimeout(() => {
+          const userWords = input.split(/\W+/).filter(word => word.length > 3);
+
+          candidates.forEach(candidate => {
+            let combined = Object.values(candidate.platforms).join(' ').toLowerCase();
+            let matches = userWords.filter(word => combined.includes(word)).length;
+            candidate.score = (matches / userWords.length) * 100;
+          });
+
+          const sorted = [...candidates].sort((a, b) => a.score - b.score);
+
+          sorted.forEach(c => {
+            const percent = Math.round(c.score);
+            const matchCard = document.createElement('div');
+            matchCard.className = "bg-gray-50 p-4 rounded-lg shadow border";
+
+            matchCard.innerHTML = `
+              <div class="text-lg font-bold">${c.name}</div>
+              <div class="text-gray-600 text-sm mb-2">${c.bio}</div>
+              <div class="w-full bg-gray-200 h-3 rounded">
+                <div class="bg-blue-600 h-3 rounded" style="width: ${percent}%"></div>
+              </div>
+              <div class="text-right text-sm mt-1 font-semibold">${percent}% match</div>
+            `;
+
+            resultsContainer.appendChild(matchCard);
+          });
+
+          loadingSpinner.classList.add('hidden');
+        }, 1500);
+      });
+    });
+  </script>
 </body>
 </html>
